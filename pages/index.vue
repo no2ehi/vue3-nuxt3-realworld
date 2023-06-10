@@ -21,38 +21,22 @@
             </ul>
             </div>
 
-            <div class="article-preview">
+        <Loading v-if="articlesLoading"></Loading>
+        <div v-else-if="articlesError">{{ articlesError }}</div>
+        <div v-else v-for="article in articles.articles" :key="article.slug"  class="article-preview">
             <div class="article-meta">
-                <a href="profile.html"><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
+                <a href="profile.html"><img src="{{ article.author.image }}" /></a>
                 <div class="info">
-                <a href="" class="author">Eric Simons</a>
-                <span class="date">January 20th</span>
+                <a href="" class="author">{{ article.author.username }}</a>
+                <span class="date">{{ article.createdAt }}</span>
                 </div>
                 <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                <i class="ion-heart"></i> 29
+                <i class="ion-heart"></i> {{ article.favoritesCount }}
                 </button>
             </div>
             <a href="" class="preview-link">
-                <h1>How to build webapps that scale</h1>
-                <p>This is the description for the post.</p>
-                <span>Read more...</span>
-            </a>
-            </div>
-
-            <div class="article-preview">
-            <div class="article-meta">
-                <a href="profile.html"><img src="http://i.imgur.com/N4VcUeJ.jpg" /></a>
-                <div class="info">
-                <a href="" class="author">Albert Pai</a>
-                <span class="date">January 20th</span>
-                </div>
-                <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                <i class="ion-heart"></i> 32
-                </button>
-            </div>
-            <a href="" class="preview-link">
-                <h1>The song you won't ever stop singing. No matter how hard you try.</h1>
-                <p>This is the description for the post.</p>
+                <h1>{{ article.title }}</h1>
+                <p>{{  article.description }}</p>
                 <span>Read more...</span>
             </a>
             </div>
@@ -62,15 +46,10 @@
             <div class="sidebar">
             <p>Popular Tags</p>
 
-            <div class="tag-list">
-                <a href="" class="tag-pill tag-default">programming</a>
-                <a href="" class="tag-pill tag-default">javascript</a>
-                <a href="" class="tag-pill tag-default">emberjs</a>
-                <a href="" class="tag-pill tag-default">angularjs</a>
-                <a href="" class="tag-pill tag-default">react</a>
-                <a href="" class="tag-pill tag-default">mean</a>
-                <a href="" class="tag-pill tag-default">node</a>
-                <a href="" class="tag-pill tag-default">rails</a>
+            <Loading v-if="tagsLoading"></Loading>
+            <div v-else-if="tagsError">{{ tagsError }}</div>
+            <div v-else class="tag-list">
+                <li v-for="(tag, index) in tags.tags" :key="index" class="tag-pill tag-default" >{{ tag }}</li>
             </div>
             </div>
         </div>
@@ -83,7 +62,14 @@
 </template>
 <script setup>
 import { useAuthStore } from '~/composables/auth.ts';
+import { BASE_URL } from '~/server/api';
 
 const useAuth = useAuthStore();
+
+const { data: articles, pending: articlesLoading, error: articlesError } = useFetch(`${BASE_URL}/articles/`);
+
+const { data: tags, pending: tagsLoading, error: tagsError } = useFetch(`${BASE_URL}/tags/`);
+
+
 
 </script>

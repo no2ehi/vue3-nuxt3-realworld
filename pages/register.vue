@@ -9,7 +9,7 @@
           </p>
   
           <ul v-if="userData.errors" class="error-messages">
-            <li v-for="(error, field) in userData.errors" :key="field">{{ field }} {{ error[0] }}</li>
+            <li v-for="(error, index) in userData.errors" :key="index">{{ index }} {{ error[0] }}</li>
           </ul>
           
           <form @submit.prevent="submit">
