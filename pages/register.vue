@@ -8,23 +8,23 @@
             <NuxtLink to="/login">Don't have an account?</NuxtLink>
           </p>
   
-          <ul v-if="userData.errors" class="error-messages">
-            <li v-for="(error, index) in userData.errors" :key="index">{{ index }} {{ error[0] }}</li>
+          <ul v-if="errors" class="error-messages">
+            <li v-for="(error, index) in errors" :key="index">{{ index }} {{ error[0] }}</li>
           </ul>
           
           <form @submit.prevent="submit">
             <fieldset class="form-group">
-              <input :disabled="loading" v-model="userData.username" class="form-control form-control-lg" type="text" placeholder="User Name" />
+              <input :disabled="userIsLoading" v-model="userData.username" class="form-control form-control-lg" type="text" placeholder="User Name" />
             </fieldset>
             <fieldset class="form-group">
-              <input :disabled="loading" v-model="userData.email" class="form-control form-control-lg" type="text" placeholder="Email" />
+              <input :disabled="userIsLoading" v-model="userData.email" class="form-control form-control-lg" type="text" placeholder="Email" />
             </fieldset>
             <fieldset class="form-group">
-              <input :disabled="loading" v-model="userData.password" class="form-control form-control-lg" type="password" placeholder="Password" />
+              <input :disabled="userIsLoading" v-model="userData.password" class="form-control form-control-lg" type="password" placeholder="Password" />
             </fieldset>
-            <button :disabled="loading" class="btn btn-lg btn-primary pull-xs-right">
-              <span>{{ loading ? 'loading...' : 'Sign up' }}</span>
-              <Loading v-if="loading"></Loading>
+            <button :disabled="userIsLoading" class="btn btn-lg btn-primary pull-xs-right">
+              <span>{{ userIsLoading ? 'loading...' : 'Sign up' }}</span>
+              <Loading v-if="userIsLoading"></Loading>
             </button>
           </form>
 
@@ -35,34 +35,32 @@
 </template>
 
 <script setup>
-import { registerUser } from '~/server/api';
+import { useLogin } from '~/composables/user.composable';
 
+const {
+      register,
+      getToken,
+      userIsLoading
+     } = useLogin();
 
 const userData = reactive({
   username: null,
   email: null,
   password: null,
-  errors: null,
 });
 
-const useAuth = useAuthStore();
+const errors = ref([]);
 
-const loading = ref(false);
-
-const submit = async () => {
-  loading.value = true;
-  const data = await registerUser(userData);
-  loading.value = false;
-  userData.password = null;
-
-  if(data?.errors) {
-    userData.errors = data.errors;
-    return;
-  };
-  
-  navigateTo('/');
+async function submit() {
+  try {
+       const data = await register({
+          user: userData
+        });
+        userData.password = '';
+        if( !data ) return;
+        navigateTo('/');
+    } catch (error) {
+        errors.value = error.data.errors;
+    }
 }
-
-onMounted(() => useAuth.isAuthenticated ? navigateTo('/') : '');
-
 </script>

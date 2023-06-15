@@ -1,8 +1,15 @@
 <template>
-<div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+  <slot />
+<div class="lds-ring">
+  <div ></div>
+  <div ></div>
+  <div ></div>
+  <div ></div>
+</div>
 </template>
 
 <style scoped>
+
 .lds-ring {
   display: inline-block;
   position: relative;
@@ -13,10 +20,10 @@
   box-sizing: border-box;
   display: block;
   position: absolute;
+  border: 3px solid #fff;
   width: 24px;
   height: 24px;
   margin: 0 8px; 
-  border: 3px solid #fff;
   border-radius: 50%;
   animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
   border-color: #fff transparent transparent transparent;

@@ -8,20 +8,20 @@
             <NuxtLink to="/register">Need an account?</NuxtLink>
           </p>
   
-          <ul v-if="userData.errors" class="error-messages">
-            <li v-for="(error, index) in userData.errors" :key="index">{{ index }} {{ error[0] }}</li>
+          <ul v-if="errors" class="error-messages">
+            <li v-for="(error, index) in errors" :key="index">{{ index }} {{ error[0] }}</li>
           </ul>
   
-          <form @submit.prevent="submit">
+          <form @submit.prevent="submitNew">
             <fieldset class="form-group">
-              <input :disabled="loading" v-model="userData.email" class="form-control form-control-lg" type="text" placeholder="Email" />
+              <input :disabled="userIsLoading" v-model="userData.email" class="form-control form-control-lg" type="text" placeholder="Email" />
             </fieldset>
             <fieldset class="form-group">
-              <input :disabled="loading" v-model="userData.password" class="form-control form-control-lg" type="password" placeholder="Password" />
+              <input :disabled="userIsLoading" v-model="userData.password" class="form-control form-control-lg" type="password" placeholder="Password" />
             </fieldset>
-            <button :disabled="loading" class="btn btn-lg btn-primary pull-xs-right">
-              <span>{{ loading ? 'loading...' : 'Login' }}</span>
-              <Loading v-if="loading"></Loading>
+            <button :disabled="userIsLoading" class="btn btn-lg btn-primary pull-xs-right">
+              <span>{{ userIsLoading ? 'loading...' : 'Login' }}</span>
+              <Loading v-if="userIsLoading"></Loading>
             </button>
           </form>
         </div>
@@ -31,31 +31,30 @@
 </template>
 
 <script setup>
-import { loginUser } from '~/server/api';
+import { useLogin } from '~/composables/user.composable';
+
+const {
+      login,
+      getToken,
+      userIsLoading
+     } = useLogin();
 
 const userData = reactive({
-  username: null,
   email: null,
   password: null,
 });
+const errors = ref([]);
 
-const loading = ref(false);
-
-const useAuth = useAuthStore();
-
-const submit = async () => {
-  loading.value = true;
-  const data = await loginUser(userData);
-  loading.value = false;
-  userData.password = null;
-
-  if(data?.errors) {
-    userData.errors = data.errors;
-    return;
-  };
-
-  navigateTo('/');
+async function submitNew() {
+  try {
+       await login({
+          user: userData
+        });
+        userData.password = '';
+        navigateTo('/')
+    } catch (error) {
+        errors.value = error.data.errors;
+    }
 }
 
-onMounted(() => useAuth.isAuthenticated ? navigateTo('/') : '');
 </script>

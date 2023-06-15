@@ -21,9 +21,10 @@
             </ul>
             </div>
 
-        <Loading v-if="articlesLoading"></Loading>
-        <div v-else-if="articlesError">{{ articlesError }}</div>
-        <div v-else v-for="article in articles.articles" :key="article.slug"  class="article-preview">
+        <Loading v-if="articlesIsLoading">loading Articles...</Loading>
+        <!-- <div v-else-if="articlesError">{{ articlesError }}</div> -->
+        <div v-else v-for="article in articles" :key="article.slug"  class="article-preview">
+            {{ articlesCount }}
             <div class="article-meta">
                 <a href="profile.html"><img src="{{ article.author.image }}" /></a>
                 <div class="info">
@@ -44,32 +45,71 @@
 
         <div class="col-md-3">
             <div class="sidebar">
-            <p>Popular Tags</p>
+                <p>Popular Tags</p>
 
-            <Loading v-if="tagsLoading"></Loading>
-            <div v-else-if="tagsError">{{ tagsError }}</div>
-            <div v-else class="tag-list">
-                <li v-for="(tag, index) in tags.tags" :key="index" class="tag-pill tag-default" >{{ tag }}</li>
-            </div>
+                <!-- <Loading v-if="tagsLoading"></Loading>
+                <div v-else-if="tagsError">{{ tagsError }}</div>
+                <div v-else class="tag-list">
+                    <li v-for="(tag, index) in tags.tags" :key="index" class="tag-pill tag-default" >{{ tag }}</li>
+                </div> -->
+                </div>
             </div>
         </div>
+
+        <div class="col-md-12">
+            <Transition>
+                <div v-if="page && !articlesIsLoading && !(page === 1 && !hasNext)" class="flex items-center justify-center gap-1 mt-4">
+                    <button :disabled="articlesIsLoading || page === 1" @click="changePage(page - 1)">Previous</button>
+                    <button :disabled="articlesIsLoading || !hasNext" @click="changePage(page + 1)">Next</button>
+                </div>
+            </Transition>
         </div>
     
     </div>
-    </div> 
 
+    </div> 
 
 </template>
 <script setup>
-import { useAuthStore } from '~/composables/auth.ts';
-import { BASE_URL } from '~/server/api';
+const { get, articles, articlesCount, articlesIsLoading } = useArticles();
 
-const useAuth = useAuthStore();
+const route = useRoute();
+const router = useRouter();
 
-const { data: articles, pending: articlesLoading, error: articlesError } = useFetch(`${BASE_URL}/articles/`);
+const limit = ref(10);
+let page = computed(() => Number(route.query?.page) || 1)
 
-const { data: tags, pending: tagsLoading, error: tagsError } = useFetch(`${BASE_URL}/tags/`);
+let offset = computed(() => (page.value - 1) * limit.value)
+let totalCount = computed(() => articlesCount.value ?? 0)
+let hasNext = computed(() => totalCount.value >= limit.value)
 
+async function fetch() {
+    const params = {
+        offest: offset.value,
+        limit: limit.value
+    }
+    try {
+        await get(params);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+fetch();
+
+
+function changePage(newPage) {
+  const newPageInRange = newPage > page.value ? hasNext.value : newPage
+
+  if (newPageInRange) {
+    router.push({ query: { page: newPage } })
+  }
+}
+
+watch(() => route.query.page, () => {
+    console.log(route.query.page);
+    fetch()
+})
 
 
 </script>
