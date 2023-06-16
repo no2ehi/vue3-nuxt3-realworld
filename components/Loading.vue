@@ -1,12 +1,25 @@
 <template>
   <slot />
-<div class="lds-ring">
-  <div ></div>
-  <div ></div>
-  <div ></div>
-  <div ></div>
+<div class="lds-ring" >
+  <div :style="styleLoading"></div>
+  <div :style="styleLoading"></div>
+  <div :style="styleLoading"></div>
+  <div :style="styleLoading"></div>
 </div>
 </template>
+
+<script setup>
+const props = defineProps({
+  color: {
+    type: String,
+    default: '#fff',
+  }
+})
+
+const styleLoading = computed(() => {
+  return `border: 3px solid ${props.color}; border-color: ${props.color} transparent transparent transparent;`
+});
+</script>
 
 <style scoped>
 
@@ -20,13 +33,13 @@
   box-sizing: border-box;
   display: block;
   position: absolute;
-  border: 3px solid #fff;
+  /* border: 3px solid #fff; */
   width: 24px;
   height: 24px;
   margin: 0 8px; 
   border-radius: 50%;
   animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: #fff transparent transparent transparent;
+  /* border-color: #fff transparent transparent transparent; */
 }
 .lds-ring div:nth-child(1) {
   animation-delay: -0.45s;

@@ -20,5 +20,6 @@ export interface Author {
   image?: string
   following: boolean
 }
+
 export type PaginatedArticles = Paginated<Article[], 'articles'>
 

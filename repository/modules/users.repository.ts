@@ -1,4 +1,4 @@
-import HttpFactory, { createFetchIstance } from '../factory';
+import { createFetchIstance } from '../factory';
 
 import { AuthUserDTO, LoginFlowDTO, RegisterFlowDTO, toDomainUser, UserDTO } from './users.dto';
 import { User } from '../models/user.model';

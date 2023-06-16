@@ -1,4 +1,4 @@
-import { useAuthStore } from "../composables/auth";
+import { useAuthStore } from "../store/auth";
 import { userData } from "../types/user";
 
 export const BASE_URL = 'https://api.realworld.io/api';

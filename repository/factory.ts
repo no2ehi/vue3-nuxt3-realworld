@@ -1,40 +1,17 @@
 import { $Fetch, $fetch, FetchOptions } from 'ofetch'
+// import { injectToken } from './interceptors/injectToken.interceptor';
 
-export function createFetchIstance(): $Fetch {
 
+export function createFetchIstance(authenticated = true): $Fetch {
+  
   const fetchOptions: FetchOptions = {
     baseURL: 'https://api.realworld.io/api',
   }
 
-  /** create a new instance of $fetcher with custom option */
+  console.log(useCookie('token'))
+
+
   const apiFetcher = $fetch.create(fetchOptions);
 
   return apiFetcher;
 }
-
-
-class HttpFactory {
-  private $fetch: $Fetch;
-
-  constructor(fetcher: $Fetch) {
-    this.$fetch = fetcher;
-    this.$fetch.create(this.fetchOptions);
-  }
-
-  private fetchOptions: FetchOptions = {
-    baseURL: 'https://api.realworld.io/api',
-  }
-
-  /** create a new instance of $fetcher with custom option */
-
-  /** 
-    * method - GET, POST, PUT
-    * URL
-  **/
-  async call<T>(method: string, url: string, data?: object, extras = {}): Promise<T> {
-    const $res: T = await this.$fetch(url, { method, body: data, ...extras });
-    return $res;
-  }
-}
-
-export default HttpFactory;

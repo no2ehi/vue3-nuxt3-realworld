@@ -52,3 +52,24 @@ export function toDomainPaginatedArticles(dto: PaginatedArticlesDTO): PaginatedA
     articlesCount: dto.articlesCount
   }
 }
+
+export interface CreateArticleDTO {
+  title: string
+  description: string
+  body: string
+  tagList: string[]
+}
+
+export type UpdateArticleDTO = Omit<CreateArticleDTO, 'tagList'>
+
+
+export interface UpdateArticleParams {
+  slug: string
+  article: UpdateArticleDTO
+}
+
+export interface SingleArticleResponse {
+  article: ArticleDTO
+}
+
+

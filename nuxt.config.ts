@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
   ],
   css: [
-    '~/assets/main.css'
+    '~/assets/main.css',
+    '~/assets/style.css'
   ]
 })

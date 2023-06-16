@@ -21,7 +21,7 @@
             </ul>
             </div>
 
-        <Loading v-if="articlesIsLoading">loading Articles...</Loading>
+        <Loading v-if="articlesIsLoading" color="#5cb85c" >loading Articles...</Loading>
         <!-- <div v-else-if="articlesError">{{ articlesError }}</div> -->
         <div v-else v-for="article in articles" :key="article.slug"  class="article-preview">
             {{ articlesCount }}
@@ -47,11 +47,11 @@
             <div class="sidebar">
                 <p>Popular Tags</p>
 
-                <!-- <Loading v-if="tagsLoading"></Loading>
-                <div v-else-if="tagsError">{{ tagsError }}</div>
+                <Loading v-if="tagIsLoading" color="#5cb85c">tags loading...</Loading>
+                <!-- <div v-else-if="tagsError">{{ tagsError }}</div> -->
                 <div v-else class="tag-list">
-                    <li v-for="(tag, index) in tags.tags" :key="index" class="tag-pill tag-default" >{{ tag }}</li>
-                </div> -->
+                    <li v-for="(tag, index) in tags" :key="index" class="tag-pill tag-default" >{{ tag }}</li>
+                </div>
                 </div>
             </div>
         </div>
@@ -59,8 +59,8 @@
         <div class="col-md-12">
             <Transition>
                 <div v-if="page && !articlesIsLoading && !(page === 1 && !hasNext)" class="flex items-center justify-center gap-1 mt-4">
-                    <button :disabled="articlesIsLoading || page === 1" @click="changePage(page - 1)">Previous</button>
-                    <button :disabled="articlesIsLoading || !hasNext" @click="changePage(page + 1)">Next</button>
+                    <button class="btn button-page" :disabled="articlesIsLoading || page === 1" @click="changePage(page - 1)">Previous</button>
+                    <button class="btn m-l-2 button-page" :disabled="articlesIsLoading || !hasNext" @click="changePage(page + 1)">Next</button>
                 </div>
             </Transition>
         </div>
@@ -71,7 +71,12 @@
 
 </template>
 <script setup>
-const { get, articles, articlesCount, articlesIsLoading } = useArticles();
+const { 
+    get, articles, articlesCount, articlesIsLoading,
+    getTags, tags, tagIsLoading,
+    } = useArticles();
+
+const { getToken } = useLogin();
 
 const route = useRoute();
 const router = useRouter();
@@ -97,6 +102,16 @@ async function fetch() {
 
 fetch();
 
+async function fetchTags() {
+    try {
+        await getTags();
+    } catch(error) {
+        console.log(error)
+    }
+}
+
+fetchTags();
+
 
 function changePage(newPage) {
   const newPageInRange = newPage > page.value ? hasNext.value : newPage
@@ -113,3 +128,10 @@ watch(() => route.query.page, () => {
 
 
 </script>
+
+<style scoped>
+.button-page {
+    background-color: #5cb85c;
+    border-radius: 5px;
+}
+</style>

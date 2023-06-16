@@ -19,7 +19,7 @@ export function useLogin() {
         return usersRepository.login(credentials).then((response) => {
             username.value = response.data?.username;
             token.value = response.data?.token;
-        }).finally(() => endLoading);
+        }).finally(() => endLoading());
     }
 
     async function register(credentials: RegisterFlowDTO) {

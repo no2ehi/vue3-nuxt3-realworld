@@ -39,7 +39,7 @@ export const useAuthStore = defineStore('auth',
         localStorage.removeItem('user');
     }
 
-    const isAuthenticated = computed(() => !!token.value);
+    const isAuthenticated = computed(() => useCookie('token'));
 
     return {
         setToken,

@@ -1,7 +1,7 @@
 import { createFetchIstance } from "../factory";
 import { ApiResponseFetch } from "../models/api.model";
-import { PaginatedArticles } from "../models/articles.model";
-import { ArticleDTO, GetArticlesParams, PaginatedArticlesDTO, toDomainArticle, toDomainPaginatedArticles } from "./articles.dto";
+import { Article, PaginatedArticles } from "../models/articles.model";
+import { ArticleDTO, CreateArticleDTO, GetArticlesParams, PaginatedArticlesDTO, SingleArticleResponse, toDomainArticle, toDomainPaginatedArticles } from "./articles.dto";
 
 const httpClient = createFetchIstance();
 
@@ -11,9 +11,8 @@ export class ArticlesRepository {
 
 
     async getArticles( params: GetArticlesParams): Promise<ApiResponseFetch<PaginatedArticles>> {
-        console.log('params', params);
-
-        const result = await httpClient<ApiResponseFetch<PaginatedArticlesDTO>>((this.BASE_PATH),
+        const result = await httpClient<ApiResponseFetch<PaginatedArticlesDTO>>(
+            (this.BASE_PATH),
         {
             method: 'GET',
             params
@@ -23,7 +22,33 @@ export class ArticlesRepository {
             ...result,
             data: toDomainPaginatedArticles(result as PaginatedArticlesDTO)
         }
-}
+    }
+
+    async createArticle(article: CreateArticleDTO): Promise<ApiResponseFetch<Article>> {
+        const result = await httpClient<ApiResponseFetch<SingleArticleResponse>>(
+            this.BASE_PATH,
+            {
+                method: 'POST',
+                body: { article }
+            }
+        );
+
+        return {
+            ...result,
+            data: toDomainArticle(result.data?.article as ArticleDTO)
+        }
+    }
+
+    async getTags(): Promise<ApiResponseFetch<string[]>> {
+        const result = await httpClient<ApiResponseFetch<string[]>>(
+            '/tags', 
+        {
+            method: 'GET',
+        });
+        return {
+            data: result as string[]
+        }
+    }
 
 
 }
