@@ -39,9 +39,9 @@ export function useArticles() {
 
         return $api.article.getBySlug(slug)
         .then(response => {
-            article.value = response.data?.article;
+            article.value = response.data;
 
-            return article;
+            return article.value;
         })
         .finally(() => endLoading());
     }

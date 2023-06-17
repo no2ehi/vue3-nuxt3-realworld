@@ -28,15 +28,13 @@ export class ArticlesRepository extends HttpFactory {
             'GET',
             `${this.BASE_PATH}/${slug}`,
         );
-
+        
         return {
-            ...result,
-            data: toDomainArticle(result.data?.article as ArticleDTO)
+            data: toDomainArticle(result as ArticleDTO)
         }
       } 
 
     async createArticleOk(article: CreateArticleDTO): Promise<ApiResponseFetch<Article>> {
-        console.log('ar', article)
         const result = await this.call<ApiResponseFetch<SingleArticleResponse>>(
             'POST',
             this.BASE_PATH,

@@ -1,19 +1,19 @@
 <template>
-    <Loading v-if="articleIsLoading" />
+<Loading v-if="articleIsLoading" />
 <div v-else class="article-page">
   <div class="banner">
     <div class="container">
-      <!-- <h1>{{ article.title }}</h1> -->
+      <h1>{{ singleArticle.title }}</h1>
 
       <div class="article-meta">
         <a href=""><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
         <div class="info">
-          <a href="" class="author">Eric Simons</a>
-          <span class="date">January 20th</span>
+          <a href="" class="author">{{ singleArticle.author?.username }}</a>
+          <span class="date">{{ singleArticle.createdAt }}</span>
         </div>
         <button class="btn btn-sm btn-outline-secondary">
           <i class="ion-plus-round"></i>
-          &nbsp; Follow Eric Simons <span class="counter">(10)</span>
+          &nbsp; Follow {{ singleArticle.author?.username}} <span class="counter">(10)</span>
         </button>
         &nbsp;&nbsp;
         <button class="btn btn-sm btn-outline-primary">
@@ -27,11 +27,7 @@
   <div class="container page">
     <div class="row article-content">
       <div class="col-md-12">
-        <p>
-          Web development technologies have evolved at an incredible clip over the past few years.
-        </p>
-        <h2 id="introducing-ionic">Introducing RealWorld.</h2>
-        <p>It's a great solution for learning how other frameworks work.</p>
+        {{ singleArticle.body }}
       </div>
     </div>
 
@@ -117,11 +113,14 @@ const { getBySlug, articleIsLoading, article } = useArticles();
 
 const route = useRoute();
 
+const singleArticle = ref([]);
+
 
 async function fetchArticle(slug){
     try {
         const result = await getBySlug(slug);
-        console.log(result);
+        console.log('result', result);
+        singleArticle.value = result;
     } catch (error) {
         console.log(error);
     }

@@ -7,25 +7,28 @@ export interface GetArticlesParams {
   }
   
   export interface ArticleDTO {
-    slug: string
+    article: {
+      slug: string
     title: string
     description: string
     body: string
     tagList: string[]
-    createdAt: string
-    updatedAt: string
+    createdAt: Date
+    updatedAt: Date
     favorited: boolean
     favoritesCount: number
     author: AuthorDTO
+    }
   }
+
   
   export function toDomainArticle(dto: ArticleDTO): Article {
     return {
-      ...dto,
-      createdAt: new Date(dto.createdAt),
-      updatedAt: new Date(dto.updatedAt),
-      author: toDomainAuthor(dto.author),
-      tagList: dto.tagList.sort()
+      ...dto.article,
+      createdAt: new Date(dto.article.createdAt),
+      updatedAt: new Date(dto.article.updatedAt),
+      author: toDomainAuthor(dto.article.author),
+      tagList: dto.article.tagList.sort()
     }
   }
   

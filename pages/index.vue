@@ -76,8 +76,6 @@ const {
     getTags, tags, tagIsLoading,
     } = useArticles();
 
-const { getToken } = useLogin();
-
 const route = useRoute();
 const router = useRouter();
 
