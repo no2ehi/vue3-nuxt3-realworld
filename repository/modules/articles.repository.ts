@@ -1,22 +1,21 @@
-import { createFetchIstance } from "../factory";
+import HttpFactory from "../factory";
 import { ApiResponseFetch } from "../models/api.model";
 import { Article, PaginatedArticles } from "../models/articles.model";
 import { ArticleDTO, CreateArticleDTO, GetArticlesParams, PaginatedArticlesDTO, SingleArticleResponse, toDomainArticle, toDomainPaginatedArticles } from "./articles.dto";
 
-const httpClient = createFetchIstance();
-
-export class ArticlesRepository {
+export class ArticlesRepository extends HttpFactory {
 
     private BASE_PATH = '/articles';
 
-
-    async getArticles( params: GetArticlesParams): Promise<ApiResponseFetch<PaginatedArticles>> {
-        const result = await httpClient<ApiResponseFetch<PaginatedArticlesDTO>>(
-            (this.BASE_PATH),
-        {
-            method: 'GET',
-            params
-        });
+    async getArticleOk(params: GetArticlesParams): Promise<ApiResponseFetch<PaginatedArticles>> {
+        const result = await this.call<ApiResponseFetch<PaginatedArticlesDTO>>(
+            'GET',
+            this.BASE_PATH,
+            undefined,
+            {
+                params
+            }
+        );
 
         return {
             ...result,
@@ -24,13 +23,24 @@ export class ArticlesRepository {
         }
     }
 
-    async createArticle(article: CreateArticleDTO): Promise<ApiResponseFetch<Article>> {
-        const result = await httpClient<ApiResponseFetch<SingleArticleResponse>>(
+    async getBySlug(slug: string): Promise<ApiResponseFetch<Article>> {
+        const result = await this.call<ApiResponseFetch<SingleArticleResponse>>(
+            'GET',
+            `${this.BASE_PATH}/${slug}`,
+        );
+
+        return {
+            ...result,
+            data: toDomainArticle(result.data?.article as ArticleDTO)
+        }
+      } 
+
+    async createArticleOk(article: CreateArticleDTO): Promise<ApiResponseFetch<Article>> {
+        console.log('ar', article)
+        const result = await this.call<ApiResponseFetch<SingleArticleResponse>>(
+            'POST',
             this.BASE_PATH,
-            {
-                method: 'POST',
-                body: { article }
-            }
+            {article}
         );
 
         return {
@@ -39,12 +49,12 @@ export class ArticlesRepository {
         }
     }
 
+
     async getTags(): Promise<ApiResponseFetch<string[]>> {
-        const result = await httpClient<ApiResponseFetch<string[]>>(
-            '/tags', 
-        {
-            method: 'GET',
-        });
+        const result = await this.call<ApiResponseFetch<string[]>>(
+            'GET',
+            '/tags'
+        )
         return {
             data: result as string[]
         }

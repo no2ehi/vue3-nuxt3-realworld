@@ -2,9 +2,11 @@ import { Article, PaginatedArticles } from "~/repository/models/articles.model";
 import { CreateArticleDTO, GetArticlesParams } from "~/repository/modules/articles.dto";
 import { ArticlesRepository } from "~/repository/modules/articles.repository"
 
-const articlesRepository = new ArticlesRepository;
+// const articlesRepository = new ArticlesRepository;
 
 export function useArticles() {
+
+    const { $api } = useNuxtApp();
 
     const { startLoading, isLoading, endLoading } = useLoading();
 
@@ -12,30 +14,52 @@ export function useArticles() {
     const articlesCount = ref(0);
     const articlesIsLoading = computed(() => isLoading.value);
 
+    const article = ref<Article>();
+    const articleIsLoading = computed(() => isLoading.value);
+
     const tags = ref<string[]>([]);
     const tagIsLoading = computed(() => isLoading.value);
 
-    async function get( params: GetArticlesParams) {
+    async function get(params: GetArticlesParams) {
         startLoading();
-        articlesRepository.getArticles(params).then((response) => {
-                articles.value = response.data?.articles;
-                articlesCount.value = response.data?.articlesCount as number;
-                return articles.value;
+
+        return $api.article.getArticleOk(params)
+        .then(response => {
+            articles.value = response.data?.articles;
+            articlesCount.value = response.data?.articlesCount as number;
+
+            return articles;
         })
-        .finally(() => endLoading())
+        .finally(() => endLoading() );
+    }
+
+
+    async function getBySlug(slug: string) {
+        startLoading();
+
+        return $api.article.getBySlug(slug)
+        .then(response => {
+            article.value = response.data?.article;
+
+            return article;
+        })
+        .finally(() => endLoading());
     }
 
     async function create( article: CreateArticleDTO) {
         startLoading();
-        articlesRepository.createArticle(article).then((response) => {
+        
+        return $api.article.createArticleOk(article)
+        .then( response => {
             console.log(response);
         })
-        .finally(() => endLoading())
+        .finally(() => endLoading());
     }
 
     async function getTags() {
         startLoading();
-        articlesRepository.getTags().then((response) => {
+        return $api.article.getTags()
+        .then((response) => {
             tags.value = response.data?.tags;
         })
         .finally(() => endLoading() );
@@ -51,5 +75,8 @@ export function useArticles() {
         tags,
         tagIsLoading,
         create,
+        getBySlug,
+        articleIsLoading,
+        article
     }
 }

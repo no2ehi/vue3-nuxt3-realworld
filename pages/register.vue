@@ -39,7 +39,6 @@ import { useLogin } from '~/composables/user.composable';
 
 const {
       register,
-      getToken,
       userIsLoading
      } = useLogin();
 
