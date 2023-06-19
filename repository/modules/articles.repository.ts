@@ -16,23 +16,21 @@ export class ArticlesRepository extends HttpFactory {
                 params
             }
         );
-
+        
         return {
             ...result,
             data: toDomainPaginatedArticles(result as PaginatedArticlesDTO)
         }
     }
 
-    async getBySlug(slug: string): Promise<ApiResponseFetch<Article>> {
-        const result = await this.call<ApiResponseFetch<SingleArticleResponse>>(
+    async getBySlug(slug: string): Promise<Article> {
+        const result = await this.call<SingleArticleResponse>(
             'GET',
             `${this.BASE_PATH}/${slug}`,
         );
         
-        return {
-            data: toDomainArticle(result as ArticleDTO)
-        }
-      } 
+        return toDomainArticle(result.article)
+    } 
 
     async createArticleOk(article: CreateArticleDTO): Promise<ApiResponseFetch<Article>> {
         const result = await this.call<ApiResponseFetch<SingleArticleResponse>>(
@@ -48,14 +46,12 @@ export class ArticlesRepository extends HttpFactory {
     }
 
 
-    async getTags(): Promise<ApiResponseFetch<string[]>> {
-        const result = await this.call<ApiResponseFetch<string[]>>(
+    async getTags(): Promise<string[]> {
+        const result = await this.call<string[]>(
             'GET',
             '/tags'
         )
-        return {
-            data: result as string[]
-        }
+        return result;
     }
 
 

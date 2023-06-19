@@ -3,22 +3,22 @@
 <div v-else class="article-page">
   <div class="banner">
     <div class="container">
-      <h1>{{ singleArticle.title }}</h1>
+      <h1>{{ article.title }}</h1>
 
       <div class="article-meta">
-        <a href=""><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
+        <a href="/"><img :src="article.author.image" :alt="article.author.username"/></a>
         <div class="info">
-          <a href="" class="author">{{ singleArticle.author?.username }}</a>
-          <span class="date">{{ singleArticle.createdAt }}</span>
+          <a href="" class="author">{{ article.author?.username }}</a>
+          <span class="date">{{ article.createdAt }}</span>
         </div>
         <button class="btn btn-sm btn-outline-secondary">
           <i class="ion-plus-round"></i>
-          &nbsp; Follow {{ singleArticle.author?.username}} <span class="counter">(10)</span>
+          &nbsp; Follow {{ article.author?.username}} <span class="counter">(10)</span>
         </button>
         &nbsp;&nbsp;
         <button class="btn btn-sm btn-outline-primary">
           <i class="ion-heart"></i>
-          &nbsp; Favorite Post <span class="counter">(29)</span>
+          &nbsp; Favorite Post <span class="counter">({{ article.favoritesCount }})</span>
         </button>
       </div>
     </div>
@@ -27,7 +27,7 @@
   <div class="container page">
     <div class="row article-content">
       <div class="col-md-12">
-        {{ singleArticle.body }}
+        {{ article.body }}
       </div>
     </div>
 
@@ -35,20 +35,20 @@
 
     <div class="article-actions">
       <div class="article-meta">
-        <a href="profile.html"><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
+        <NuxtLink to="/"><img :src="article.author.image" :alt="article.author.username"/></NuxtLink>
         <div class="info">
-          <a href="" class="author">Eric Simons</a>
-          <span class="date">January 20th</span>
+          <NuxtLink to="" class="author">{{ article.author?.username }}</NuxtLink>
+          <span class="date">{{ article.createdAt }}</span>
         </div>
 
         <button class="btn btn-sm btn-outline-secondary">
           <i class="ion-plus-round"></i>
-          &nbsp; Follow Eric Simons
+          &nbsp; Follow {{ article.author?.username }}
         </button>
         &nbsp;
         <button class="btn btn-sm btn-outline-primary">
           <i class="ion-heart"></i>
-          &nbsp; Favorite Post <span class="counter">(29)</span>
+          &nbsp; Favorite Post <span class="counter">({{ article.favoritesCount }})</span>
         </button>
       </div>
     </div>
@@ -108,24 +108,20 @@
 
 
 <script setup>
-
 const { getBySlug, articleIsLoading, article } = useArticles();
 
 const route = useRoute();
 
-const singleArticle = ref([]);
+await getBySlug(route.params.slug);
 
 
-async function fetchArticle(slug){
-    try {
-        const result = await getBySlug(slug);
-        console.log('result', result);
-        singleArticle.value = result;
-    } catch (error) {
-        console.log(error);
-    }
-}
 
-onMounted(() => fetchArticle(route.params.slug));
+// async function fetchArticle(slug){
+//     try {
+//         const result = await getBySlug(slug);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 </script>

@@ -1,8 +1,5 @@
-import { Article, PaginatedArticles } from "~/repository/models/articles.model";
+import { Article } from "~/repository/models/articles.model";
 import { CreateArticleDTO, GetArticlesParams } from "~/repository/modules/articles.dto";
-import { ArticlesRepository } from "~/repository/modules/articles.repository"
-
-// const articlesRepository = new ArticlesRepository;
 
 export function useArticles() {
 
@@ -39,7 +36,7 @@ export function useArticles() {
 
         return $api.article.getBySlug(slug)
         .then(response => {
-            article.value = response.data;
+            article.value = response as Article;
 
             return article.value;
         })
@@ -51,6 +48,7 @@ export function useArticles() {
         
         return $api.article.createArticleOk(article)
         .then( response => {
+            // Todo
             console.log(response);
         })
         .finally(() => endLoading());
@@ -60,7 +58,7 @@ export function useArticles() {
         startLoading();
         return $api.article.getTags()
         .then((response) => {
-            tags.value = response.data?.tags;
+            tags.value = response.tags as string[];
         })
         .finally(() => endLoading() );
     }

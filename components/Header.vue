@@ -15,7 +15,8 @@
           <li  class="nav-item">
             <NuxtLink class="nav-link" to="/settings">
               <!-- <img :src="useAuth.getUser.image" alt="image-profile" /> -->
-               user </NuxtLink>
+               user
+              </NuxtLink>
           </li>
           <li  class="nav-item">
             <NuxtLink class="nav-link" to="/login">Sign in</NuxtLink>

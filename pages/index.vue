@@ -13,22 +13,24 @@
             <div class="feed-toggle">
             <ul class="nav nav-pills outline-active">
                 <li class="nav-item">
-                <a class="nav-link disabled" href="">Your Feed</a>
+                    <NuxtLink class="nav-link disabled"  to="/">
+                        Your Feed
+                    </NuxtLink>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link active" href="">Global Feed</a>
+                    <NuxtLink class="nav-link active"  to="/">
+                        Global Feed
+                    </NuxtLink>
                 </li>
             </ul>
             </div>
 
-        <Loading v-if="articlesIsLoading" color="#5cb85c" >loading Articles...</Loading>
-        <!-- <div v-else-if="articlesError">{{ articlesError }}</div> -->
-        <div v-else v-for="article in articles" :key="article.slug"  class="article-preview">
-            {{ articlesCount }}
+        <Loading v-if="articleIsLoading" color="#5cb85c" >loading Articles...</Loading>
+        <div v-if="1" v-for="article in articles" :key="article.slug"  class="article-preview">
             <div class="article-meta">
-                <a href="profile.html"><img src="{{ article.author.image }}" /></a>
+                <NuxtLink :to="article.slug"><img :src="article.author.image" :alt="article.author.username" /></NuxtLink>
                 <div class="info">
-                <a href="" class="author">{{ article.author.username }}</a>
+                <NuxtLink to="" class="author">{{ article.author.username }}</NuxtLink>
                 <span class="date">{{ article.createdAt }}</span>
                 </div>
                 <button class="btn btn-outline-primary btn-sm pull-xs-right">
@@ -48,19 +50,18 @@
                 <p>Popular Tags</p>
 
                 <Loading v-if="tagIsLoading" color="#5cb85c">tags loading...</Loading>
-                <!-- <div v-else-if="tagsError">{{ tagsError }}</div> -->
-                <div v-else class="tag-list">
+                <div class="tag-list">
                     <li v-for="(tag, index) in tags" :key="index" class="tag-pill tag-default" >{{ tag }}</li>
                 </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-12">
+        <div class="col-md-12" >
             <Transition>
-                <div v-if="page && !articlesIsLoading && !(page === 1 && !hasNext)" class="flex items-center justify-center gap-1 mt-4">
-                    <button class="btn button-page" :disabled="articlesIsLoading || page === 1" @click="changePage(page - 1)">Previous</button>
-                    <button class="btn m-l-2 button-page" :disabled="articlesIsLoading || !hasNext" @click="changePage(page + 1)">Next</button>
+                <div v-if="page && (page === 1 && !hasNext)" class="flex items-center justify-center gap-1 mt-4">
+                    <button class="btn button-page" :disabled="page === 1" @click="changePage(page - 1)">Previous</button>
+                    <button class="btn m-l-2 button-page" :disabled="hasNext" @click="changePage(page + 1)">Next</button>
                 </div>
             </Transition>
         </div>
@@ -72,7 +73,7 @@
 </template>
 <script setup>
 const { 
-    get, articles, articlesCount, articlesIsLoading,
+    get: getArticles, articles, articlesCount, articleIsLoading,
     getTags, tags, tagIsLoading,
     } = useArticles();
 
@@ -82,48 +83,34 @@ const router = useRouter();
 const limit = ref(10);
 let page = computed(() => Number(route.query?.page) || 1)
 
-let offset = computed(() => (page.value - 1) * limit.value)
-let totalCount = computed(() => articlesCount.value ?? 0)
-let hasNext = computed(() => totalCount.value >= limit.value)
+let offset = computed(() => (page.value - 1) * limit.value);
+let totalCount = computed(() => articlesCount.value ?? 0);
+let hasNext = computed(() => totalCount.value >= limit.value);
 
-async function fetch() {
-    const params = {
-        offest: offset.value,
-        limit: limit.value
-    }
-    try {
-        await get(params);
-    } catch (error) {
-        console.log(error.data)
-    }
+const params = {
+    offest: offset.value,
+    limit: limit.value
 }
 
-fetch();
-
-async function fetchTags() {
-    try {
-        await getTags();
-    } catch(error) {
-        console.log(error)
-    }
-}
-
-fetchTags();
-
+await getArticles(params); 
+await getTags();
 
 function changePage(newPage) {
-  const newPageInRange = newPage > page.value ? hasNext.value : newPage
+    const newPageInRange = newPage > page.value ? hasNext.value : newPage
 
   if (newPageInRange) {
     router.push({ query: { page: newPage } })
   }
 }
 
-watch(() => route.query.page, () => {
-    console.log(route.query.page);
-    fetch()
-})
-
+watch(() => route.query.page, async () => {
+    // ToDo
+    const params = {
+        offest: offset.value,
+        limit: limit.value
+    }
+    await getArticles(params);
+});
 
 </script>
 
@@ -133,3 +120,4 @@ watch(() => route.query.page, () => {
     border-radius: 5px;
 }
 </style>
+

@@ -23,6 +23,14 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
   }
 
+  if (process.server) {
+    // Code executed on the server-side
+    console.log("Running on the server-side");
+  } else {
+    // Code executed on the client-side
+    console.log("Running on the client-side");
+  }
+  
   /** create a new instance of $fetcher with custom option */
   const apiFetcher = $fetch.create(fetchOptions);
 
