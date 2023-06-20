@@ -13,7 +13,6 @@ class HttpFactory {
   **/
   async call<T>(method: string, url: string, data?: object, extras = {}): Promise<T> {
     const $res: T = await this.$fetch(url, { method, body: data, ...extras });
-    console.log('$res> ',$res)
     return $res;
   }
 }

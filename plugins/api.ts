@@ -2,6 +2,7 @@ import { $fetch, FetchOptions } from 'ofetch';
 import { defineNuxtPlugin } from '#app';
 import UsersRepository from '~~/repository/modules/users.repository';
 import { ArticlesRepository } from '~/repository/modules/articles.repository';
+import { config } from 'process';
 
 /** ApiInstance interface provides us with good typing */
 interface IApiInstance {
@@ -11,24 +12,17 @@ interface IApiInstance {
 
 export default defineNuxtPlugin((nuxtApp) => {
 
+  const config = useRuntimeConfig();
+  const token = useCookie('token');
+
   const fetchOptions: FetchOptions = {
-    baseURL: 'https://api.realworld.io/api',
+    baseURL: config.public.baseUrl,
   }
 
-  const token = useCookie('token');
-  
   if(token.value) {
     fetchOptions.headers = {
         Authorization: `Bearer ${token.value}`
     }
-  }
-
-  if (process.server) {
-    // Code executed on the server-side
-    console.log("Running on the server-side");
-  } else {
-    // Code executed on the client-side
-    console.log("Running on the client-side");
   }
   
   /** create a new instance of $fetcher with custom option */
