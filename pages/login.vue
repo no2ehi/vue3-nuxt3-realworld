@@ -71,4 +71,6 @@ async function submitNew() {
     }
 }
 
+onMounted(() => getToken() && navigateTo('/') );
+
 </script>

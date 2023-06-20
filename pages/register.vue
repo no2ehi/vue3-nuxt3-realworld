@@ -39,6 +39,7 @@ import { useLogin } from '~/composables/user.composable';
 
 const {
       register,
+      getToken,
       userIsLoading
      } = useLogin();
 
@@ -62,4 +63,7 @@ async function submit() {
         errors.value = error.data.errors;
     }
 }
+
+onMounted(() => getToken() && navigateTo('/') );
+
 </script>
