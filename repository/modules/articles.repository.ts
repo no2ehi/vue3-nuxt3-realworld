@@ -32,17 +32,13 @@ export class ArticlesRepository extends HttpFactory {
         return toDomainArticle(result.article)
     } 
 
-    async createArticleOk(article: CreateArticleDTO): Promise<ApiResponseFetch<Article>> {
-        const result = await this.call<ApiResponseFetch<SingleArticleResponse>>(
+    async createArticleOk(article: CreateArticleDTO): Promise<Article> {
+        const result = await this.call<SingleArticleResponse>(
             'POST',
             this.BASE_PATH,
             {article}
         );
-
-        return {
-            ...result,
-            data: toDomainArticle(result.data?.article as ArticleDTO)
-        }
+        return toDomainArticle(result.article);
     }
 
 
@@ -50,7 +46,8 @@ export class ArticlesRepository extends HttpFactory {
         const result = await this.call<string[]>(
             'GET',
             '/tags'
-        )
+        );
+
         return result;
     }
 

@@ -29,6 +29,11 @@
       <div class="col-md-12">
         {{ article.body }}
       </div>
+      <ul class="tag-list m-t-2">
+        <li v-for="tag in article.tagList" class="tag-default tag-pill tag-outline">
+              {{ tag }}
+        </li>
+      </ul>
     </div>
 
     <hr />

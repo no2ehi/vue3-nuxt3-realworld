@@ -48,8 +48,8 @@ export function useArticles() {
         
         return $api.article.createArticleOk(article)
         .then( response => {
-            // Todo
             console.log(response);
+            return response;
         })
         .finally(() => endLoading());
     }
@@ -58,7 +58,7 @@ export function useArticles() {
         startLoading();
         return $api.article.getTags()
         .then((response) => {
-            tags.value = response.tags as string[];
+            tags.value = response.tags;
         })
         .finally(() => endLoading() );
     }
