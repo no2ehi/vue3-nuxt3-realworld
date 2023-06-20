@@ -65,6 +65,16 @@ export function useArticles() {
         .finally(() => endLoading());
     }
 
+    async function deleteArticle( slug: string) {
+        startLoading();
+        
+        return $api.article.deletArticle(slug)
+        .then( response => {
+            return response;
+        })
+        .finally(() => endLoading());
+    }
+
     async function getTags() {
         startLoading();
         return $api.article.getTags()
@@ -85,6 +95,7 @@ export function useArticles() {
         tagIsLoading,
         create,
         update,
+        deleteArticle,
         getBySlug,
         articleIsLoading,
         article

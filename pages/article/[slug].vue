@@ -133,7 +133,7 @@
 import { useLogin } from "~/composables/user.composable";
 
 const { getToken } = useLogin();
-const { getBySlug, articleIsLoading, article } = useArticles();
+const { getBySlug, deleteArticle, articleIsLoading, article } = useArticles();
 
 const route = useRoute();
 
@@ -141,6 +141,16 @@ await getBySlug(route.params.slug);
 
 function editArticle() {
   navigateTo(`/editor/${article.value.slug}`);
+}
+
+async function removeArticle() {
+  try {
+    const result = await deleteArticle(article.value.slug);
+    
+    navigateTo('/');
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 // async function fetchArticle(slug){

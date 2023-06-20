@@ -50,6 +50,13 @@ export class ArticlesRepository extends HttpFactory {
         return toDomainArticle(result.article);
     }
 
+    async deletArticle(slug: string): Promise<undefined> {
+        return await this.call<undefined>(
+            'DELETE',
+            `${this.BASE_PATH}/${slug}`,
+        );
+    }
+
 
     async getTags(): Promise<string[]> {
         const result = await this.call<string[]>(
