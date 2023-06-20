@@ -33,10 +33,20 @@ export function useLogin() {
             .finally(() => endLoading());
         }
 
+    function getToken() {
+        return token.value;
+    }
+
+    function setToken(value: string) {
+        token.value = value;
+    }
+
 
     return {
         login,
         register,
-        userIsLoading
+        getToken,
+        setToken,
+        userIsLoading,
     }
 }
