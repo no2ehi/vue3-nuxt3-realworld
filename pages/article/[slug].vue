@@ -10,16 +10,33 @@
         <div class="info">
           <a href="" class="author">{{ article.author?.username }}</a>
           <span class="date">{{ article.createdAt }}</span>
-        </div>
-        <button class="btn btn-sm btn-outline-secondary">
+        </div> 
+
+        <button 
+          v-if="getToken"
+          @click="editArticle"
+          class="btn btn-sm btn-outline-secondary">
+          Edit Article
+        </button>
+
+        <button v-else class="btn btn-sm btn-outline-secondary">
           <i class="ion-plus-round"></i>
           &nbsp; Follow {{ article.author?.username}} <span class="counter">(10)</span>
         </button>
         &nbsp;&nbsp;
-        <button class="btn btn-sm btn-outline-primary">
+
+        <button 
+          v-if="getToken"
+          @click="removeArticle"
+          class="btn btn-outline-danger btn-sm">
+          Delete Article
+        </button>
+
+        <button v-else class="btn btn-sm btn-outline-primary">
           <i class="ion-heart"></i>
           &nbsp; Favorite Post <span class="counter">({{ article.favoritesCount }})</span>
         </button>
+
       </div>
     </div>
   </div>
@@ -113,13 +130,18 @@
 
 
 <script setup>
+import { useLogin } from "~/composables/user.composable";
+
+const { getToken } = useLogin();
 const { getBySlug, articleIsLoading, article } = useArticles();
 
 const route = useRoute();
 
 await getBySlug(route.params.slug);
 
-
+function editArticle() {
+  navigateTo(`/editor/${article.value.slug}`);
+}
 
 // async function fetchArticle(slug){
 //     try {

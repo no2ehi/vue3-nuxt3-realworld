@@ -41,6 +41,15 @@ export class ArticlesRepository extends HttpFactory {
         return toDomainArticle(result.article);
     }
 
+    async updateArticle(slug: string, article: CreateArticleDTO): Promise<Article> {
+        const result = await this.call<SingleArticleResponse>(
+            'PUT',
+            `${this.BASE_PATH}/${slug}`,
+            {article}
+        );
+        return toDomainArticle(result.article);
+    }
+
 
     async getTags(): Promise<string[]> {
         const result = await this.call<string[]>(

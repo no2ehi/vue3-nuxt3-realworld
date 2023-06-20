@@ -54,6 +54,17 @@ export function useArticles() {
         .finally(() => endLoading());
     }
 
+    async function update( slug: string, article: CreateArticleDTO) {
+        startLoading();
+        
+        return $api.article.updateArticle(slug, article)
+        .then( response => {
+            console.log(response);
+            return response;
+        })
+        .finally(() => endLoading());
+    }
+
     async function getTags() {
         startLoading();
         return $api.article.getTags()
@@ -73,6 +84,7 @@ export function useArticles() {
         tags,
         tagIsLoading,
         create,
+        update,
         getBySlug,
         articleIsLoading,
         article
