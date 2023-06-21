@@ -8,6 +8,7 @@ import { ApiResponseFetch } from '../models/api.model';
 class UsersRepository extends HttpFactory {
 
   private BASE_PATH = '/users';
+  private BASE_PATH_USER ='/user';
 
   async login(credentials: LoginFlowDTO): Promise<ApiResponseFetch<User>> {
     const result = await this.call<ApiResponseFetch<User>>(
@@ -32,6 +33,25 @@ class UsersRepository extends HttpFactory {
     return {
       data: toDomainUser(result as UserDTO)
     };
+  }
+
+  async getUser(): Promise<User> {
+    const result = await this.call(
+      'GET',
+      this.BASE_PATH_USER,
+    );
+
+    return toDomainUser(result as UserDTO);
+  }
+
+  async updateSetting(userEdited: UserDTO): Promise<User> {
+    const result = await this.call(
+      'PUT',
+      this.BASE_PATH_USER,
+      userEdited
+    );
+
+    return toDomainUser(result as UserDTO);
   }
 
 }

@@ -1,4 +1,4 @@
-import { LoginFlowDTO, RegisterFlowDTO } from '../repository/modules/users.dto';
+import { LoginFlowDTO, RegisterFlowDTO, UserDTO } from '../repository/modules/users.dto';
 import UsersRepository from '~/repository/modules/users.repository';
 
 export function useLogin() {
@@ -22,16 +22,36 @@ export function useLogin() {
     }
 
     async function register(credentials: RegisterFlowDTO) {
-            startLoading();
-            return $api.auth.register(credentials)
-            .then((response) => {
-                username.value = response.data?.username;
-                token.value = response.data?.token;
+        startLoading();
+        return $api.auth.register(credentials)
+        .then((response) => {
+            username.value = response.data?.username;
+            token.value = response.data?.token;
 
-                return token.value
-            })
-            .finally(() => endLoading());
-        }
+            return token.value
+        })
+        .finally(() => endLoading());
+    }
+
+    async function getCurrentUser() {
+        startLoading();
+
+        return $api.auth.getUser()
+        .then((response) => {
+            return response;
+        })
+        .finally(() => endLoading())
+    }
+
+    async function updateUser(userEdited: UserDTO) {
+        startLoading();
+
+        return $api.auth.updateSetting(userEdited)
+        .then((response) => {
+            return response;
+        })
+        .finally(() => endLoading())
+    }
 
     function getToken() {
         return token.value;
@@ -50,6 +70,8 @@ export function useLogin() {
         register,
         getToken,
         setToken,
+        updateUser,
+        getCurrentUser,
         checkToken,
         getUsername,
         userIsLoading,
