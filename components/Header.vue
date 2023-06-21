@@ -6,23 +6,23 @@
           <li class="nav-item">
               <NuxtLink class="nav-link" to="/">Home</NuxtLink>
           </li>
-          <li  class="nav-item">
+          <li v-if="checkToken" class="nav-item">
             <NuxtLink class="nav-link" to="/editor"><i class="ion-compose"></i>&nbsp;New Article </NuxtLink>
           </li>
-          <li  class="nav-item">
+          <li v-if="checkToken" class="nav-item">
             <NuxtLink class="nav-link" to="/settings"><i class="ion-gear-a"></i>&nbsp;Settings </NuxtLink>
           </li>
-          <li  class="nav-item">
-            <NuxtLink class="nav-link" to="/settings">
-              <!-- <img :src="useAuth.getUser.image" alt="image-profile" /> -->
-               user
-              </NuxtLink>
-          </li>
-          <li  class="nav-item">
+          <li v-if="!checkToken" class="nav-item">
             <NuxtLink class="nav-link" to="/login">Sign in</NuxtLink>
           </li>
-          <li  class="nav-item">
+          <li v-if="!checkToken" class="nav-item">
             <NuxtLink class="nav-link" to="/register">Sign up</NuxtLink>
+          </li>
+          <li v-if="checkToken" class="nav-item">
+            <NuxtLink class="nav-link" to="/settings">
+              <!-- <img :src="profileImage" alt="image-profile" /> -->
+               {{ getUsername }}
+              </NuxtLink>
           </li>
         </ul>
       </div>
@@ -31,5 +31,6 @@
 
 <script setup>
 
+const { checkToken, getUsername } = useLogin();
 
 </script>

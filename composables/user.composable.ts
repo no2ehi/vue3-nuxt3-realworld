@@ -41,12 +41,17 @@ export function useLogin() {
         token.value = value;
     }
 
+    const checkToken = computed(() => token.value);
+    const getUsername = computed(() => username.value);
+
 
     return {
         login,
         register,
         getToken,
         setToken,
+        checkToken,
+        getUsername,
         userIsLoading,
     }
 }
