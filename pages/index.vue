@@ -26,9 +26,11 @@
             </div>
 
         <Loading v-if="articleIsLoading" color="#5cb85c" >loading Articles...</Loading>
-        <div v-if="1" v-for="article in articles" :key="article.slug"  class="article-preview">
+        <div v-else v-for="article in articles" :key="article.slug"  class="article-preview">
             <div class="article-meta">
-                <NuxtLink :to="article.slug"><img :src="article.author.image" :alt="article.author.username" /></NuxtLink>
+                <NuxtLink :to="`article/${article.slug}`">
+                    <img :src="article.author.image" :alt="article.author.username" />
+                </NuxtLink>
                 <div class="info">
                 <NuxtLink to="" class="author">{{ article.author.username }}</NuxtLink>
                 <span class="date">{{ article.createdAt }}</span>
@@ -50,7 +52,7 @@
                 <p>Popular Tags</p>
 
                 <Loading v-if="tagIsLoading" color="#5cb85c">tags loading...</Loading>
-                <div class="tag-list">
+                <div v-else class="tag-list">
                     <li v-for="(tag, index) in tags" :key="index" class="tag-pill tag-default" >{{ tag }}</li>
                 </div>
                 </div>
@@ -92,7 +94,7 @@ const params = {
     limit: limit.value
 }
 
-await getArticles(params); 
+await getArticles(params);
 await getTags();
 
 function changePage(newPage) {
@@ -111,6 +113,26 @@ watch(() => route.query.page, async () => {
     }
     await getArticles(params);
 });
+
+// async function fetchArticles() {
+//     try {
+//         await getArticles(params); 
+//     } catch (error) {
+//         console.log(error)
+//     }
+// } 
+
+// fetchArticles();
+
+// async function fetchTags() {
+//     try {       
+//         await getTags();
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
+
+// fetchTags();
 
 </script>
 

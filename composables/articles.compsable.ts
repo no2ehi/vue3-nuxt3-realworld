@@ -48,7 +48,7 @@ export function useArticles() {
         
         return $api.article.createArticleOk(article)
         .then( response => {
-            console.log(response);
+
             return response;
         })
         .finally(() => endLoading());
@@ -59,7 +59,7 @@ export function useArticles() {
         
         return $api.article.updateArticle(slug, article)
         .then( response => {
-            console.log(response);
+
             return response;
         })
         .finally(() => endLoading());

@@ -110,7 +110,7 @@ onMounted(async () => {
     if(route.params.slug) {
        try {
             const result = await getBySlug(route.params.slug);
-            console.log('result mounted', result);
+
             formData.value = result;
        } catch (error) {
             console.log(error)

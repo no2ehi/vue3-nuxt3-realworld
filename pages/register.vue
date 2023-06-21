@@ -39,7 +39,7 @@ import { useLogin } from '~/composables/user.composable';
 
 const {
       register,
-      getToken,
+      checkToken,
       userIsLoading
      } = useLogin();
 
@@ -64,6 +64,6 @@ async function submit() {
     }
 }
 
-onMounted(() => getToken() && navigateTo('/') );
+onMounted(() => checkToken.value && navigateTo('/') );
 
 </script>
