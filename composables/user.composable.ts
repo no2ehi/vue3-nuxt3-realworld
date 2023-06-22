@@ -1,3 +1,4 @@
+import { ProfileUser } from '~/repository/models/user.model';
 import { LoginFlowDTO, RegisterFlowDTO, UserDTO } from '../repository/modules/users.dto';
 import UsersRepository from '~/repository/modules/users.repository';
 
@@ -8,6 +9,7 @@ export function useLogin() {
 
     const userIsLoading = computed(() => isLoading.value );
     const username = useCookie('username');
+    const profile = ref<ProfileUser>();
     const token = useCookie('token');
 
     async function login(credentials: LoginFlowDTO) {
@@ -53,6 +55,17 @@ export function useLogin() {
         .finally(() => endLoading())
     }
 
+    async function getProfile(username: string) {
+        startLoading();
+
+        return $api.auth.getProfileUser(username)
+        .then((response) => {
+            profile.value = response;
+            return profile;
+        })
+        .finally(() => endLoading())
+    }
+
     function getToken() {
         return token.value;
     }
@@ -72,6 +85,8 @@ export function useLogin() {
         setToken,
         updateUser,
         getCurrentUser,
+        getProfile,
+        profile,
         checkToken,
         getUsername,
         userIsLoading,

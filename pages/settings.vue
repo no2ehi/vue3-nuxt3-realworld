@@ -54,6 +54,7 @@
 </template>
 
 <script setup>
+import { useLogin } from '~/composables/user.composable';
 
 const { updateUser, getCurrentUser, userIsLoading } = useLogin();
 

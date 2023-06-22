@@ -1,4 +1,4 @@
-import { User } from "../models/user.model"
+import { ProfileUser, User } from "../models/user.model"
 
 
 export interface RegisterCredentials {
@@ -35,6 +35,24 @@ export interface RegisterCredentials {
       token: dto.user.token ? dto.user.token : undefined,
       image: dto.user.image ? dto.user.image : undefined,
       bio: dto.user.bio ? dto.user.bio : undefined
+    }
+  }
+
+  export interface ProfileDTO {
+    profile: {
+      username: string,
+      bio: string | null,
+      image: string | null,
+      following: boolean
+    }
+  }
+
+  export function toDomainProfileUser(dto: ProfileDTO): ProfileUser {
+    return {
+      username: dto.profile.username,
+      bio: dto.profile.bio ? dto.profile.bio : undefined,
+      image: dto.profile.image ? dto.profile.image : undefined,
+      following: dto.profile.following
     }
   }
 

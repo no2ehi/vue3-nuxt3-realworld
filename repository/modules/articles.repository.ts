@@ -12,9 +12,7 @@ export class ArticlesRepository extends HttpFactory {
             'GET',
             this.BASE_PATH,
             undefined,
-            {
-                params
-            }
+            {params}
         );
         
         return {

@@ -28,12 +28,12 @@
         <Loading v-if="articleIsLoading" color="#5cb85c" >loading Articles...</Loading>
         <div v-else v-for="article in articles" :key="article.slug"  class="article-preview">
             <div class="article-meta">
-                <NuxtLink :to="`article/${article.slug}`">
+                <NuxtLink :to="`/@${article.author.username}`">
                     <img :src="article.author.image" :alt="article.author.username" />
                 </NuxtLink>
                 <div class="info">
-                <NuxtLink to="" class="author">{{ article.author.username }}</NuxtLink>
-                <span class="date">{{ article.createdAt }}</span>
+                <NuxtLink :to="`/@${article.author.username}`" class="author">{{ article.author.username }}</NuxtLink>
+                <span class="date">{{ moment(article.createdAt).format('LL') }}</span>
                 </div>
                 <button class="btn btn-outline-primary btn-sm pull-xs-right">
                 <i class="ion-heart"></i> {{ article.favoritesCount }}
@@ -59,11 +59,11 @@
             </div>
         </div>
 
-        <div class="col-md-12" >
+        <div class="col-md-12 m-t-2" >
             <Transition>
-                <div v-if="page && (page === 1 && !hasNext)" class="flex items-center justify-center gap-1 mt-4">
+                <div  class="flex items-center justify-center gap-1 mt-4">
                     <button class="btn button-page" :disabled="page === 1" @click="changePage(page - 1)">Previous</button>
-                    <button class="btn m-l-2 button-page" :disabled="hasNext" @click="changePage(page + 1)">Next</button>
+                    <button class="btn m-l-2 button-page" :disabled="!hasNext" @click="changePage(page + 1)">Next</button>
                 </div>
             </Transition>
         </div>
@@ -74,6 +74,9 @@
 
 </template>
 <script setup>
+//utils
+import moment from "moment";
+
 const { 
     get: getArticles, articles, articlesCount, articleIsLoading,
     getTags, tags, tagIsLoading,
@@ -84,18 +87,10 @@ const router = useRouter();
 
 const limit = ref(10);
 let page = computed(() => Number(route.query?.page) || 1)
+let offset = computed(() => (page.value - 1) * limit.value)
+let totalCount = computed(() => articlesCount.value ?? 0)
+let hasNext = computed(() => totalCount.value >= limit.value)
 
-let offset = computed(() => (page.value - 1) * limit.value);
-let totalCount = computed(() => articlesCount.value ?? 0);
-let hasNext = computed(() => totalCount.value >= limit.value);
-
-const params = {
-    offest: offset.value,
-    limit: limit.value
-}
-
-await getArticles(params);
-await getTags();
 
 function changePage(newPage) {
     const newPageInRange = newPage > page.value ? hasNext.value : newPage
@@ -105,24 +100,34 @@ function changePage(newPage) {
   }
 }
 
-watch(() => route.query.page, async () => {
-    // ToDo
+async function fetchArticles() {
     const params = {
         offest: offset.value,
         limit: limit.value
     }
-    await getArticles(params);
+    try {
+        await getArticles(params);
+    } catch (error) {
+        console.log(error)
+    }
+} 
+
+async function getTagsArticles() {
+    try {
+        await getTags(); 
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+fetchArticles();
+getTagsArticles();
+
+watch(() => route.query.page, async () => {
+    fetchArticles();
 });
 
-// async function fetchArticles() {
-//     try {
-//         await getArticles(params); 
-//     } catch (error) {
-//         console.log(error)
-//     }
-// } 
 
-// fetchArticles();
 
 // async function fetchTags() {
 //     try {       

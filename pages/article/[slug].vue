@@ -6,10 +6,10 @@
       <h1>{{ article.title }}</h1>
 
       <div class="article-meta">
-        <a href="/"><img :src="article.author.image" :alt="article.author.username"/></a>
+        <NuxtLink :to="`/@${article.author.username}`"><img :src="article.author.image" :alt="article.author.username"/></NuxtLink>
         <div class="info">
-          <a href="" class="author">{{ article.author?.username }}</a>
-          <span class="date">{{ article.createdAt }}</span>
+          <NuxtLink :to="`/@${article.author.username}`">{{ article.author?.username }}</NuxtLink>
+          <span class="date">{{ moment(article.createdAt).format('LL') }}</span>
         </div> 
 
         <button 
@@ -57,10 +57,10 @@
 
     <div class="article-actions">
       <div class="article-meta">
-        <NuxtLink to="/"><img :src="article.author.image" :alt="article.author.username"/></NuxtLink>
+        <NuxtLink :to="`/@${article.author.username}`"><img :src="article.author.image" :alt="article.author.username"/></NuxtLink>
         <div class="info">
-          <NuxtLink to="" class="author">{{ article.author?.username }}</NuxtLink>
-          <span class="date">{{ article.createdAt }}</span>
+          <NuxtLink :to="`/@${article.author.username}`">{{ article.author?.username }}</NuxtLink>
+          <span class="date">{{ moment(article.createdAt).format('LL') }}</span>
         </div>
 
         <button class="btn btn-sm btn-outline-secondary">
@@ -75,6 +75,8 @@
       </div>
     </div>
 
+
+    <!-- TODO -->
     <div class="row">
       <div class="col-xs-12 col-md-8 offset-md-2">
         <form class="card comment-form">
@@ -130,7 +132,11 @@
 
 
 <script setup>
+// Compsables
 import { useLogin } from "~/composables/user.composable";
+
+//utils
+import moment from "moment";
 
 const { getToken } = useLogin();
 const { getBySlug, deleteArticle, articleIsLoading, article } = useArticles();
