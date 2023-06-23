@@ -45,7 +45,7 @@
           </fieldset>
         </form>
         <hr />
-        <button class="btn btn-outline-danger">Or click here to logout.</button>
+        <button @click="logout" class="btn btn-outline-danger">Or click here to logout.</button>
       </div>
     </div>
   </div>
@@ -89,6 +89,16 @@ async function updateSetting() {
     } catch (error) {
         console.log(error);
     }
+}
+
+function logout() {
+  const token = useCookie('token');
+  const username = useCookie('username');
+
+  token.value = null;
+  username.value = null;
+
+  navigateTo('/login')
 }
 
 const buttonType = computed(() => {
