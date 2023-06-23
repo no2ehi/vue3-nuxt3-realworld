@@ -73,4 +73,8 @@ export interface SingleArticleResponse {
   article: ArticleDTO
 }
 
+export interface TagsDTO {
+  tags: string[]
+}
+
 

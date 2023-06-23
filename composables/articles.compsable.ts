@@ -79,7 +79,7 @@ export function useArticles() {
         startLoading();
         return $api.article.getTags()
         .then((response) => {
-            tags.value = response.tags;
+            tags.value = response as string[];
         })
         .finally(() => endLoading() );
     }

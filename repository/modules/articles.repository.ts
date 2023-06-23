@@ -1,7 +1,7 @@
 import HttpFactory from "../factory";
 import { ApiResponseFetch } from "../models/api.model";
 import { Article, PaginatedArticles } from "../models/articles.model";
-import { ArticleDTO, CreateArticleDTO, GetArticlesParams, PaginatedArticlesDTO, SingleArticleResponse, toDomainArticle, toDomainPaginatedArticles } from "./articles.dto";
+import { ArticleDTO, CreateArticleDTO, GetArticlesParams, PaginatedArticlesDTO, SingleArticleResponse, TagsDTO, toDomainArticle, toDomainPaginatedArticles } from "./articles.dto";
 
 export class ArticlesRepository extends HttpFactory {
 
@@ -57,12 +57,12 @@ export class ArticlesRepository extends HttpFactory {
 
 
     async getTags(): Promise<string[]> {
-        const result = await this.call<string[]>(
+        const result = await this.call<TagsDTO>(
             'GET',
             '/tags'
         );
 
-        return result;
+        return result.tags;
     }
 
 
