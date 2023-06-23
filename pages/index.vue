@@ -100,17 +100,18 @@ function changePage(newPage) {
   }
 }
 
-const params = {
-        offest: offset.value,
-        limit: limit.value
-    }
-
-await getArticles(params);
+await getArticles({
+    offset: offset.value,
+    limit: limit.value
+});
 
 await getTags();
 
 watch(() => route.query.page, () => {
-    getArticles(params);
+    getArticles({
+    offset: offset.value,
+    limit: limit.value
+});
 });
 
 </script>
