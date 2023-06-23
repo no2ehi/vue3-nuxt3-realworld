@@ -77,26 +77,26 @@ import moment from 'moment';
 import { useLogin } from '~/composables/user.composable';
 
 const { getProfile, userIsLoading, profile, checkToken } = useLogin();
-const { get: getArticles, articleIsLoading, articles, articlesCount } = useArticles();
+const { getArticles, articleIsLoading, articles, articlesCount } = useArticles();
 
 const route = useRoute();
 
-async function getProfileUser() {
+function getProfileUser() {
     try {
-        await getProfile(route.params.slug);
+        getProfile(route.params.slug);
     } catch (error) {
         console.log(error)
     }
 }
 
-async function getArticlesUser() {
+function getArticlesUser() {
     try {
         const params = {
             author: route.params.slug,
             offest: 0,
             limit: 5,
         }
-        await getArticles(params);
+        getArticles(params);
     } catch (error) {
         console.log(error);
     }

@@ -12,7 +12,7 @@
             <li v-for="(error, index) in errors" :key="index">{{ index }} {{ error[0] }}</li>
           </ul>
   
-          <form @submit.prevent="newLogin">
+          <form @submit.prevent="loginUser">
             <fieldset class="form-group">
               <input :disabled="userIsLoading" v-model="userData.email" class="form-control form-control-lg" type="text" placeholder="Email" />
             </fieldset>
@@ -39,35 +39,23 @@ const {
       userIsLoading
      } = useLogin();
 
-const userData = reactive({
+let userData = reactive({
   email: null,
   password: null,
 });
+
 const errors = ref([]);
 
-
-async function newLogin() {
+async function loginUser() {
     try {
-      const result = await login({
-      user: userData
-    });
-        userData.password = '';
-        navigateTo('/')
+      await login({
+        user: userData
+      });
+      userData.password = '';
+      navigateTo('/')
     } catch (error) {
         errors.value = error.data.errors;
         console.log(error)
-    }
-}
-
-async function submitNew() {
-  try {
-       await login({
-          user: userData
-        });
-        userData.password = '';
-        navigateTo('/')
-    } catch (error) {
-        errors.value = error.data.errors;
     }
 }
 

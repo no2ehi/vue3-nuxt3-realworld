@@ -52,7 +52,7 @@
 
 <script setup>
 const route = useRoute();
-const {update, getBySlug, articlesIsLoading } = useArticles();
+const {update, getBySlug, article, articlesIsLoading } = useArticles();
 
 const formData = ref({
     title: undefined,

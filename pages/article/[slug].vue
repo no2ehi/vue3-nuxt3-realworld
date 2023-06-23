@@ -1,5 +1,5 @@
 <template>
-<Loading v-if="articleIsLoading" />
+<Loading v-if="articleIsLoading" color="#5cb85c">Loading Article</Loading>
 <div v-else class="article-page">
   <div class="banner">
     <div class="container">
@@ -143,7 +143,7 @@ const { getBySlug, deleteArticle, articleIsLoading, article } = useArticles();
 
 const route = useRoute();
 
-await getBySlug(route.params.slug);
+getBySlug(route.params.slug);
 
 function editArticle() {
   navigateTo(`/editor/${article.value.slug}`);
@@ -151,20 +151,12 @@ function editArticle() {
 
 async function removeArticle() {
   try {
-    const result = await deleteArticle(article.value.slug);
+    deleteArticle(article.value.slug);
     
     navigateTo('/');
   } catch (error) {
     console.log(error);
   }
 }
-
-// async function fetchArticle(slug){
-//     try {
-//         const result = await getBySlug(slug);
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
 
 </script>

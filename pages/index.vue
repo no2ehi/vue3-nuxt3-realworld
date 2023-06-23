@@ -78,7 +78,7 @@
 import moment from "moment";
 
 const { 
-    get: getArticles, articles, articlesCount, articleIsLoading,
+    getArticles, articles, articlesCount, articleIsLoading,
     getTags, tags, tagIsLoading,
     } = useArticles();
 
@@ -100,44 +100,18 @@ function changePage(newPage) {
   }
 }
 
-async function fetchArticles() {
-    const params = {
+const params = {
         offest: offset.value,
         limit: limit.value
     }
-    try {
-        await getArticles(params);
-    } catch (error) {
-        console.log(error)
-    }
-} 
 
-async function getTagsArticles() {
-    try {
-        await getTags(); 
-    } catch (error) {
-        console.log(error)
-    }
-}
+await getArticles(params);
 
-fetchArticles();
-getTagsArticles();
+await getTags();
 
-watch(() => route.query.page, async () => {
-    fetchArticles();
+watch(() => route.query.page, () => {
+    getArticles(params);
 });
-
-
-
-// async function fetchTags() {
-//     try {       
-//         await getTags();
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
-
-// fetchTags();
 
 </script>
 

@@ -17,7 +17,7 @@ export function useArticles() {
     const tags = ref<string[]>([]);
     const tagIsLoading = computed(() => isLoading.value);
 
-    async function get(params: GetArticlesParams) {
+    async function getArticles(params: GetArticlesParams) {
         startLoading();
 
         return $api.article.getArticleOk(params)
@@ -86,7 +86,7 @@ export function useArticles() {
 
 
     return {
-        get,
+        getArticles,
         articles,
         articlesCount,
         articlesIsLoading,
