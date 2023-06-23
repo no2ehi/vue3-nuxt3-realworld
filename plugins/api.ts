@@ -1,5 +1,5 @@
 import { $fetch, FetchOptions } from 'ofetch';
-import { CookieRef, defineNuxtPlugin } from '#app';
+import { defineNuxtPlugin } from '#app';
 import UsersRepository from '~~/repository/modules/users.repository';
 import { ArticlesRepository } from '~/repository/modules/articles.repository';
 
@@ -10,18 +10,21 @@ interface IApiInstance {
 }
 
 export default defineNuxtPlugin((nuxtApp) => {
-
   const config = useRuntimeConfig();
-  const token = useCookie<string | null>('token') || null;
 
   const fetchOptions: FetchOptions = {
     baseURL: config.public.baseUrl,
-  }
 
-  if(token.value) {
-    fetchOptions.headers = {
-        Authorization: `Bearer ${token.value}`
-    }
+    onRequest({ options }) {
+      const token = useCookie('token');
+			if (token.value) {
+				options.headers = {
+					...options.headers,
+					Authorization: `Bearer ${token.value}`  
+				};
+			}
+		},
+    
   }
   
   /** create a new instance of $fetcher with custom option */
