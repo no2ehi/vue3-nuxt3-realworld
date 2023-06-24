@@ -18,18 +18,8 @@ export function useArticles() {
     const tagIsLoading = computed(() => isLoading.value);
 
     async function getArticles(params: GetArticlesParams) {
-        startLoading();
-
-        return $api.article.getArticleOk(params)
-        .then(response => {
-            articles.value = response.data?.articles;
-            articlesCount.value = response.data?.articlesCount as number;
-
-            return articles;
-        })
-        .finally(() => endLoading() );
+        return await useAsyncData(() => $api.article.getArticleOk(params));
     }
-
 
     async function getBySlug(slug: string) {
         startLoading();
@@ -76,12 +66,7 @@ export function useArticles() {
     }
 
     async function getTags() {
-        startLoading();
-        return $api.article.getTags()
-        .then((response) => {
-            tags.value = response as string[];
-        })
-        .finally(() => endLoading() );
+        return await useAsyncData(() => $api.article.getTags());
     }
 
 

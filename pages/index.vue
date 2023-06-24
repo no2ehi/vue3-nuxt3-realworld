@@ -24,10 +24,9 @@
                 </li>
             </ul>
             </div>
-
-        <Loading v-if="articleIsLoading" color="#5cb85c" >loading Articles...</Loading>
-        <div v-else v-for="article in articles" :key="article.slug"  class="article-preview">
-            <div class="article-meta">
+            <Loading v-if="articlesLoading" color="#5cb85c" >loading Articles...</Loading>
+            <div v-else v-for="article in articlesData.articles" :key="article.slug"  class="article-preview">
+                <div class="article-meta">
                 <NuxtLink :to="`/@${article.author.username}`">
                     <img :src="article.author.image" :alt="article.author.username" />
                 </NuxtLink>
@@ -51,10 +50,10 @@
             <div class="sidebar">
                 <p>Popular Tags</p>
 
-                <Loading v-if="tagIsLoading" color="#5cb85c">tags loading...</Loading>
-                <div v-else class="tag-list">
-                    <li v-for="(tag, index) in tags" :key="index" class="tag-pill tag-default" >{{ tag }}</li>
-                </div>
+                <Loading v-if="tagsLoading" color="#5cb85c">tags loading...</Loading>
+                    <div v-else class="tag-list">
+                        <li v-for="(tag, index) in tagsData" :key="index" class="tag-pill tag-default" >{{ tag }}</li>
+                    </div>
                 </div>
             </div>
         </div>
@@ -78,8 +77,8 @@
 import moment from "moment";
 
 const { 
-    getArticles, articles, articlesCount, articleIsLoading,
-    getTags, tags, tagIsLoading,
+    getArticles,
+    getTags,
     } = useArticles();
 
 const route = useRoute();
@@ -88,7 +87,7 @@ const router = useRouter();
 const limit = ref(10);
 let page = computed(() => Number(route.query?.page) || 1)
 let offset = computed(() => (page.value - 1) * limit.value)
-let totalCount = computed(() => articlesCount.value ?? 0)
+let totalCount = computed(() => articlesData.value.articlesCount ?? 0)
 let hasNext = computed(() => totalCount.value >= limit.value)
 
 
@@ -100,18 +99,19 @@ function changePage(newPage) {
   }
 }
 
-await getArticles({
+const { data: articlesData, pending: articlesLoading } = await getArticles({
     offset: offset.value,
     limit: limit.value
 });
 
-await getTags();
+const { data: tagsData, pending: tagsLoading } = await getTags();
+
 
 watch(() => route.query.page, () => {
     getArticles({
-    offset: offset.value,
-    limit: limit.value
-});
+        offset: offset.value,
+        limit: limit.value
+    });
 });
 
 </script>
