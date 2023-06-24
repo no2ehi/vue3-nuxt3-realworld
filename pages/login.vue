@@ -52,7 +52,10 @@ async function loginUser() {
         user: userData
       });
       userData.password = '';
-      navigateTo('/')
+
+      reloadNuxtApp({
+         path: "/",
+      });
     } catch (error) {
         errors.value = error.data.errors;
         console.log(error)

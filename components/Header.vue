@@ -19,9 +19,9 @@
             <NuxtLink class="nav-link" to="/register">Sign up</NuxtLink>
           </li>
           <li v-if="checkToken" class="nav-item">
-            <NuxtLink class="nav-link" :to="`/@${getUsername}`">
-              <!-- <img :src="profileImage" alt="image-profile" /> -->
-               {{ getUsername }}
+            <NuxtLink class="nav-link" :to="`/@${getUser.value.username}`">
+              <img :src="getUser.value.image" class="user-pic" alt="image-profile" />
+               {{ getUser.value.username }}
               </NuxtLink>
           </li>
         </ul>
@@ -32,6 +32,6 @@
 <script setup>
 import { useLogin } from '~/composables/user.composable';
 
-const { checkToken, getUsername } = useLogin();
+const { checkToken, getUser } = useLogin();
 
 </script>

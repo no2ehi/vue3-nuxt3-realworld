@@ -58,7 +58,10 @@ async function submit() {
         });
         userData.password = '';
         if( !data ) return;
-        navigateTo('/');
+        
+        reloadNuxtApp({
+          path: "/",
+        });
     } catch (error) {
         errors.value = error.data.errors;
     }

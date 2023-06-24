@@ -1,6 +1,5 @@
-import { ProfileUser } from '~/repository/models/user.model';
+import { ProfileUser, User } from '~/repository/models/user.model';
 import { LoginFlowDTO, RegisterFlowDTO, UserDTO } from '../repository/modules/users.dto';
-import UsersRepository from '~/repository/modules/users.repository';
 
 export function useLogin() {
 
@@ -8,8 +7,8 @@ export function useLogin() {
     const { startLoading, isLoading, endLoading } = useLoading();
 
     const userIsLoading = computed(() => isLoading.value );
-    const username = useCookie('username');
     const profile = ref<ProfileUser>();
+    const user = useCookie<User | null>('user');
     const token = useCookie('token');
 
     async function login(credentials: LoginFlowDTO) {
@@ -17,7 +16,7 @@ export function useLogin() {
 
         return $api.auth.login(credentials)
         .then((response) => {
-            username.value = response.data?.username;
+            user.value = response.data || null;
             token.value = response.data?.token;
         })
         .finally(() => endLoading())
@@ -27,7 +26,7 @@ export function useLogin() {
         startLoading();
         return $api.auth.register(credentials)
         .then((response) => {
-            username.value = response.data?.username;
+            user.value = response.data || null;
             token.value = response.data?.token;
 
             return token.value
@@ -75,7 +74,7 @@ export function useLogin() {
     }
 
     const checkToken = computed(() => token.value);
-    const getUsername = computed(() => username.value);
+    const getUser = computed(() => user )
 
 
     return {
@@ -86,9 +85,9 @@ export function useLogin() {
         updateUser,
         getCurrentUser,
         getProfile,
+        getUser,
         profile,
         checkToken,
-        getUsername,
         userIsLoading,
     }
 }

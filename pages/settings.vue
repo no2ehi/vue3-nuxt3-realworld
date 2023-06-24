@@ -93,12 +93,14 @@ async function updateSetting() {
 
 function logout() {
   const token = useCookie('token');
-  const username = useCookie('username');
+  const user = useCookie('user');
 
   token.value = null;
-  username.value = null;
+  user.value = null;
 
-  navigateTo('/login')
+  reloadNuxtApp({
+      path: "/login",
+  });
 }
 
 const buttonType = computed(() => {
