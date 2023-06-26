@@ -2,11 +2,13 @@ import { $fetch, FetchOptions } from 'ofetch';
 import { defineNuxtPlugin } from '#app';
 import UsersRepository from '~~/repository/modules/users.repository';
 import { ArticlesRepository } from '~/repository/modules/articles.repository';
+import { CommentsRepository } from '~/repository/modules/comments.repository';
 
 /** ApiInstance interface provides us with good typing */
 interface IApiInstance {
   auth: UsersRepository,
-  article: ArticlesRepository
+  article: ArticlesRepository,
+  comment: CommentsRepository
 }
 
 export default defineNuxtPlugin((nuxtApp) => {
@@ -33,7 +35,8 @@ export default defineNuxtPlugin((nuxtApp) => {
   /** an object containing all repositories we need to expose */
   const modules: IApiInstance = {
     auth: new UsersRepository(apiFetcher),
-    article: new ArticlesRepository(apiFetcher)
+    article: new ArticlesRepository(apiFetcher),
+    comment: new CommentsRepository(apiFetcher)
   };
 
   return {

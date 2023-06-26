@@ -89,41 +89,32 @@
           </div>
         </form>
 
-        <div class="card">
-          <div class="card-block">
-            <p class="card-text">
-              With supporting text below as a natural lead-in to additional content.
-            </p>
-          </div>
-          <div class="card-footer">
-            <a href="" class="comment-author">
-              <img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img" />
-            </a>
-            &nbsp;
-            <a href="" class="comment-author">Jacob Schmidt</a>
-            <span class="date-posted">Dec 29th</span>
-          </div>
-        </div>
+        <Loading v-if="commentsIsLoading" color="#5cb85c">Loading Comment...</Loading>
 
-        <div class="card">
-          <div class="card-block">
-            <p class="card-text">
-              With supporting text below as a natural lead-in to additional content.
-            </p>
-          </div>
-          <div class="card-footer">
-            <a href="" class="comment-author">
-              <img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img" />
-            </a>
-            &nbsp;
-            <a href="" class="comment-author">Jacob Schmidt</a>
-            <span class="date-posted">Dec 29th</span>
-            <span class="mod-options">
-              <i class="ion-edit"></i>
-              <i class="ion-trash-a"></i>
-            </span>
+        <template v-else>
+          <div v-if="comments.length">
+          
+          <div v-for="comment in comments" class="card">
+            <div class="card-block">
+              <p class="card-text">
+                {{ comment.body }}
+              </p>
+            </div>
+            <div class="card-footer">
+              <a href="" class="comment-author">
+                <img :src="comment.author.image" class="comment-author-img" />
+              </a>
+              &nbsp;
+              <a href="" class="comment-author">{{ comment.author.username }}</a>
+              <span class="date-posted">{{ moment(comment.createdAt).format('LL') }}</span>
+            </div>
           </div>
         </div>
+          <div v-else>
+            There is no comment!
+          </div>
+        </template>
+
       </div>
     </div>
   </div>
@@ -134,16 +125,21 @@
 <script setup>
 // Compsables
 import { useLogin } from "~/composables/user.composable";
+import { useComments } from "~/composables/comments.compsables";
+// import { useArticles } from "~/composables/articles.compsables";
 
 //utils
 import moment from "moment";
 
 const { checkToken } = useLogin();
 const { getBySlug, deleteArticle, articleIsLoading, article } = useArticles();
+const { getComments, commentsIsLoading, comments } = useComments();
 
 const route = useRoute();
 
 getBySlug(route.params.slug);
+
+getComments(route.params.slug);
 
 function editArticle() {
   navigateTo(`/editor/${article.value.slug}`);
