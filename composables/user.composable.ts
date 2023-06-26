@@ -65,9 +65,6 @@ export function useLogin() {
         .finally(() => endLoading())
     }
 
-    function getToken() {
-        return token.value;
-    }
 
     function setToken(value: string) {
         token.value = value;
@@ -80,7 +77,6 @@ export function useLogin() {
     return {
         login,
         register,
-        getToken,
         setToken,
         updateUser,
         getCurrentUser,

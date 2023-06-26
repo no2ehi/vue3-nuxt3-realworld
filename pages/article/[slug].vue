@@ -13,7 +13,7 @@
         </div> 
 
         <button 
-          v-if="getToken"
+          v-if="checkToken"
           @click="editArticle"
           class="btn btn-sm btn-outline-secondary">
           Edit Article
@@ -26,7 +26,7 @@
         &nbsp;&nbsp;
 
         <button 
-          v-if="getToken"
+          v-if="checkToken"
           @click="removeArticle"
           class="btn btn-outline-danger btn-sm">
           Delete Article
@@ -138,7 +138,7 @@ import { useLogin } from "~/composables/user.composable";
 //utils
 import moment from "moment";
 
-const { getToken } = useLogin();
+const { checkToken } = useLogin();
 const { getBySlug, deleteArticle, articleIsLoading, article } = useArticles();
 
 const route = useRoute();
