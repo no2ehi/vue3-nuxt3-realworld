@@ -16,8 +16,8 @@ export default defineNuxtPlugin((nuxtApp) => {
     baseURL: config.public.baseUrl,
 
     onRequest({ options }) {
-      const token = useCookie('token');
-			if (token.value) {
+      const token = useCookie('token') || null;
+			if (token) {
 				options.headers = {
 					...options.headers,
 					Authorization: `Bearer ${token.value}`  

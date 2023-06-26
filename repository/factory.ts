@@ -3,7 +3,7 @@ import { $Fetch } from 'ofetch';
 class HttpFactory {
   private $fetch: $Fetch;
 
-  constructor(fetcher: $Fetch,) {
+  constructor(fetcher: $Fetch) {
     this.$fetch = fetcher;
   }
 
