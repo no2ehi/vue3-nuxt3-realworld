@@ -79,13 +79,14 @@
     <!-- TODO -->
     <div class="row">
       <div class="col-xs-12 col-md-8 offset-md-2">
-        <form class="card comment-form">
+
+        <form v-if="checkToken" @submit.prevent="sendComment" class="card comment-form">
           <div class="card-block">
-            <textarea class="form-control" placeholder="Write a comment..." rows="3"></textarea>
+            <textarea v-model="comment" :disabled="isLoading" class="form-control" placeholder="Write a comment..." rows="3"></textarea>
           </div>
           <div class="card-footer">
-            <img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img" />
-            <button class="btn btn-sm btn-primary">Post Comment</button>
+            <img v-if="getUser" :src="getUser.value.image" class="comment-author-img" />
+            <button :disabled="isLoading" class="btn btn-sm btn-primary">Post Comment</button>
           </div>
         </form>
 
@@ -107,6 +108,9 @@
               &nbsp;
               <a href="" class="comment-author">{{ comment.author.username }}</a>
               <span class="date-posted">{{ moment(comment.createdAt).format('LL') }}</span>
+              <span @click="deleteComment(comment.id)" class="mod-options">
+                <i class="ion-trash-a">delete</i>
+              </span>
             </div>
           </div>
         </div>
@@ -126,30 +130,68 @@
 // Compsables
 import { useLogin } from "~/composables/user.composable";
 import { useComments } from "~/composables/comments.compsables";
-// import { useArticles } from "~/composables/articles.compsables";
 
 //utils
 import moment from "moment";
 
-const { checkToken } = useLogin();
+const { checkToken, getUser } = useLogin();
 const { getBySlug, deleteArticle, articleIsLoading, article } = useArticles();
-const { getComments, commentsIsLoading, comments } = useComments();
+const { getComments, commentsIsLoading, comments, sendUserComment, deleteUserComment } = useComments();
+const { startLoading, endLoading, isLoading } = useLoading();
 
 const route = useRoute();
+const slug = route.params.slug;
+const comment = ref();
 
-getBySlug(route.params.slug);
+getBySlug(slug);
 
-getComments(route.params.slug);
+getComments(slug);
 
 function editArticle() {
-  navigateTo(`/editor/${article.value.slug}`);
+  navigateTo(`/editor/${slug}`);
 }
 
 async function removeArticle() {
   try {
-    deleteArticle(article.value.slug);
+    deleteArticle(slug);
     
     navigateTo('/');
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function sendComment() {
+  if(!comment.value.trim().length) return;
+
+  try {
+    startLoading();
+    const result = await sendUserComment({
+      slug,
+      comment: {
+        body: comment.value
+      }
+    });
+    console.log(result)
+    endLoading();
+    if(!result.id) return;
+
+    comment.value = '';
+    getComments(slug);
+  } catch (error) {
+    endLoading();
+    console.log(error);
+  }
+}
+
+async function deleteComment(commentId) {
+  try {
+    deleteUserComment({
+      slug,
+      id: commentId
+    });
+
+    getComments(slug);
   } catch (error) {
     console.log(error);
   }

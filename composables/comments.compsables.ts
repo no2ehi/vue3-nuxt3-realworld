@@ -1,4 +1,5 @@
 import { Comment } from "~/repository/models/comment.model";
+import { GetCommentParams, GetDeleteCommentParams } from "~/repository/modules/comments.dto";
 
 export function useComments() {
 
@@ -21,8 +22,24 @@ export function useComments() {
         .finally(() => endLoading() );
     }
 
+    async function sendUserComment(params: GetCommentParams) {
+        return $api.comment.sendComment(params)
+        .then(response => {
+            return response;
+        });
+    }
+
+    async function deleteUserComment(params: GetDeleteCommentParams) {
+        return $api.comment.deleteComment(params)
+        .then(response => {
+            return response;
+        });
+    }
+
     return {
         getComments,
+        sendUserComment,
+        deleteUserComment,
 
         comments,
         commentsIsLoading

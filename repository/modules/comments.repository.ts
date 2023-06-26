@@ -1,5 +1,6 @@
 import HttpFactory from "../factory";
-import { CommentDTO, Comments, toDomainComment } from "./comments.dto";
+import { Comment } from "../models/comment.model";
+import { CommentFlowDTO, Comments, GetCommentParams, GetDeleteCommentParams, toDomainComment } from "./comments.dto";
 
 export class CommentsRepository extends HttpFactory {
 
@@ -12,6 +13,23 @@ export class CommentsRepository extends HttpFactory {
         );
 
         return result;
+    }
+
+    async sendComment({ slug, comment}: GetCommentParams): Promise<Comment> {
+        const result = await this.call<CommentFlowDTO>(
+            'POST',
+            `${this.BASE_PATH}/${slug}/comments`,
+            {comment}
+        );
+
+        return toDomainComment(result.comment);
+    }
+
+    async deleteComment({slug, id}: GetDeleteCommentParams): Promise<undefined> {
+        return await this.call<undefined>(
+            'DELETE',
+            `${this.BASE_PATH}/${slug}/comments/${id}`
+        );
     }
 
 }

@@ -26,4 +26,19 @@ export interface Comments {
   comments: CommentDTO[]
 }
 
+export interface CommentFlowDTO {
+  comment: CommentDTO
+}
+
+export interface GetCommentParams {
+  slug: string,
+  comment: {
+    body: string
+  }
+}
+
+export interface GetDeleteCommentParams {
+  slug: string,
+  id: string
+}
 
