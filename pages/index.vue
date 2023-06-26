@@ -100,12 +100,12 @@ function changePage(newPage) {
   }
 }
 
-getArticles({
+await getArticles({
     offset: offset.value,
     limit: limit.value
 });
 
-getTags();
+await getTags();
 
 watch(() => route.query.page, () => {
     getArticles({
