@@ -1,5 +1,8 @@
 import { ProfileUser, User } from '~/repository/models/user.model';
 import { LoginFlowDTO, RegisterFlowDTO, UserDTO } from '../repository/modules/users.dto';
+import UsersRepository from '~/repository/modules/users.repository';
+
+const userRepository = new UsersRepository();
 
 export function useLogin() {
 
@@ -71,7 +74,11 @@ export function useLogin() {
     }
 
     const checkToken = computed(() => token.value);
-    const getUser = computed(() => user )
+    const getUser = computed(() => user );
+
+    async function login2() {
+        return useApi<LoginFlowDTO, User>(userRepository.login);
+    }
 
 
     return {

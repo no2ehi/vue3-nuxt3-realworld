@@ -30,10 +30,13 @@ export function useComments() {
     }
 
     async function deleteUserComment(params: GetDeleteCommentParams) {
+        startLoading();
+
         return $api.comment.deleteComment(params)
         .then(response => {
             return response;
-        });
+        })
+        .finally(() => endLoading() );
     }
 
     return {

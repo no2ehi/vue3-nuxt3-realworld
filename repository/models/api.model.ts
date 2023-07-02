@@ -1,12 +1,16 @@
-export interface ApiErrorMap {
+export interface ErrorT {
     [key: string]: string[]
   }
   
-  export interface ApiResponse<T> {
-    successful: boolean
-    timestamp: Date
-    data?: T
-    errors?: ApiErrorMap
+  export interface ApiResponse<DataT> {
+    data: Ref<DataT | null>
+    pending: Ref<boolean>
+    refresh: (opts?: AsyncDataExecuteOptions) => Promise<void>
+    error: Ref<ErrorT | null>
+  }
+
+  interface AsyncDataExecuteOptions {
+    dedupe?: boolean
   }
 
   export interface ApiResponseFetch<T> {
