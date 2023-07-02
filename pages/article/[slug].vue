@@ -94,26 +94,25 @@
 
         <template v-else>
           <div v-if="comments.length">
-          
-          <div v-for="comment in comments" class="card">
-            <div class="card-block">
-              <p class="card-text">
-                {{ comment.body }}
-              </p>
-            </div>
-            <div class="card-footer">
-              <a href="" class="comment-author">
-                <img :src="comment.author.image" class="comment-author-img" />
-              </a>
-              &nbsp;
-              <a href="" class="comment-author">{{ comment.author.username }}</a>
-              <span class="date-posted">{{ moment(comment.createdAt).format('LL') }}</span>
-              <span @click="deleteComment(comment.id)" class="mod-options">
-                <i class="ion-trash-a">delete</i>
-              </span>
+            <div v-for="comment in comments" class="card">
+              <div class="card-block">
+                <p class="card-text">
+                  {{ comment.body }}
+                </p>
+              </div>
+              <div class="card-footer">
+                <a href="" class="comment-author">
+                  <img :src="comment.author.image" class="comment-author-img" />
+                </a>
+                &nbsp;
+                <a href="" class="comment-author">{{ comment.author.username }}</a>
+                <span class="date-posted">{{ moment(comment.createdAt).format('LL') }}</span>
+                <span @click="deleteComment(comment.id)" class="mod-options">
+                  <i class="ion-trash-a">delete</i>
+                </span>
+              </div>
             </div>
           </div>
-        </div>
           <div v-else>
             There is no comment!
           </div>
@@ -172,7 +171,6 @@ async function sendComment() {
         body: comment.value
       }
     });
-    console.log(result)
     endLoading();
     if(!result.id) return;
 
